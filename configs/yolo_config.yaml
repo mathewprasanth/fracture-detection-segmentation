@@ -1,0 +1,7 @@
+names:
+  0: fractured
+nc: 1
+path: /Users/mathewprasanth/Documents/AI&ML/Projects - ML/fracture-detection-segmentation/data/yolo_dataset
+test: images/test
+train: images/train
+val: images/val

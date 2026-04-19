@@ -1,0 +1,13 @@
+torch
+torchvision
+ultralytics
+segmentation-models-pytorch
+albumentations
+opencv-python-headless
+gradio
+Pillow
+numpy
+pandas
+scipy
+PyYAML
+huggingface_hub
