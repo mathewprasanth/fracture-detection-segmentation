@@ -1,5 +1,5 @@
 
-```markdown
+
 # Bone Fracture Detection and Segmentation
 
 End-to-end medical imaging pipeline using deep learning to detect, localize, and segment bone fractures from X-ray images — with explainability via Grad-CAM.
@@ -176,5 +176,5 @@ AI/ML Engineer
 
 AWS Certified Cloud Practitioner · AWS Certified Machine Learning Specialty
 
-```
+
 
