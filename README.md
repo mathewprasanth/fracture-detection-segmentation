@@ -1,99 +1,79 @@
+# 🦴 Bone Fracture Detection & Segmentation
 
+End-to-end medical imaging pipeline using deep learning to detect, localise, and segment bone fractures from X-ray images — with explainability via Grad-CAM.
 
-# Bone Fracture Detection and Segmentation
-
-End-to-end medical imaging pipeline using deep learning to detect, localize, and segment bone fractures from X-ray images — with explainability via Grad-CAM.
-
-**Live Demo** → https://huggingface.co/spaces/mathewprasanth/FractureDetectionSegmentation  
-**Model Weights** → https://huggingface.co/mathewprasanth/FractureDetectionSegmentationWeights
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-HuggingFace-yellow)](https://huggingface.co/spaces/mathewprasanth/FractureDetectionSegmentation)
+[![Model Weights](https://img.shields.io/badge/Weights-HuggingFace-blue)](https://huggingface.co/mathewprasanth/FractureDetectionSegmentationWeights)
+[![PyTorch](https://img.shields.io/badge/PyTorch-ML-red)](https://pytorch.org)
 
 ---
 
-## What It Does
+## 📊 Results
 
-Bone fractures in X-rays can be subtle and easily missed, especially under workload pressure. This system automates fracture detection and highlights the exact fracture region, assisting radiologists with faster and more consistent diagnosis.
+| Metric | Value |
+|---|---|
+| Detection mAP50 | 0.479 |
+| Detection Precision | 0.709 |
+| Detection Recall | 0.462 |
+| Segmentation Dice Score | 0.6224 |
+| Dataset | FracAtlas — 4,083 radiologist-annotated X-rays |
+| Note | Single-institution dataset — metrics reflect dataset difficulty |
+
+---
+
+## 🧠 What It Does
+
+Bone fractures in X-rays can be subtle and easily missed under workload pressure. This system automates fracture detection and highlights the exact fracture region, assisting radiologists with faster and more consistent diagnosis.
 
 The pipeline performs three tasks:
-- Detects fracture location using object detection
-- Segments the exact fracture boundary pixel-by-pixel
-- Generates explainability heatmaps showing model attention
+- Detects fracture location using YOLO object detection
+- Segments the exact fracture boundary pixel-by-pixel using U-Net
+- Generates Grad-CAM heatmaps showing model attention regions
 
-This reflects real-world medical AI workflows, where detection, localization, and interpretability are all critical for clinical trust and adoption.
+This reflects real-world medical AI workflows where detection, localisation, and interpretability are all critical for clinical trust and adoption.
 
 ---
 
-## Tech Stack
+## ⚙️ Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Detection Model | YOLO (Ultralytics, YOLOv3 trained from YOLO26m base) |
-| Segmentation Model | U-Net with ResNet34 encoder (segmentation_models_pytorch) |
-| Explainability | Grad-CAM (custom implementation with PyTorch hooks) |
+| Detection | YOLO (Ultralytics, YOLOv3 from YOLO26m base) |
+| Segmentation | U-Net with ResNet34 encoder (segmentation_models_pytorch) |
+| Explainability | Grad-CAM (custom PyTorch hooks) |
 | Backend | PyTorch |
 | UI | Gradio |
 | Hosting | Hugging Face Spaces |
 | Model Storage | Hugging Face Model Hub |
-| Image Processing | OpenCV, NumPy |
-| Data Pipeline | Albumentations |
+| Image Processing | OpenCV, Albumentations |
 
 ---
 
-## Dataset
-
-**FracAtlas X-ray Dataset** — 4,083 labeled medical images.
-
-| Category | Count |
-|---|---|
-| Fractured | 717 |
-| Non-Fractured | ~3,366 |
-
-- Binary classification + segmentation labels  
-- Train/Validation/Test split via CSV files  
-- Class imbalance handled during training  
-
----
-
-## Pipeline Architecture
+## 🏗️ Pipeline Architecture
 
 ```
-
 X-ray Image
 → YOLO Detection (bounding box + confidence)
 → U-Net Segmentation (pixel mask)
 → Grad-CAM (attention heatmap)
 → Output: detection + mask + explainability
-
 ```
 
 ---
 
-## Model Architecture
+## 🔑 Key Training Decisions
 
-### Detection (YOLO)
-- mAP50: 0.479  
-- Precision: 0.709  
-- Recall: 0.462  
-
-### Segmentation (U-Net + ResNet34)
-- Loss: BCE + Dice Loss  
-- Dice Score: 0.6224  
-
----
-
-## Key Training Decisions
-
-- 640px resolution outperformed 1280px due to dataset size constraints  
-- Low confidence threshold (0.05) to capture subtle fractures  
-- Combined BCE + Dice loss for stable segmentation  
-- ReduceLROnPlateau scheduler for training stability  
+- 640px resolution outperformed 1280px due to dataset size constraints
+- Low confidence threshold (0.05) to capture subtle fractures
+- Combined BCE + Dice loss for stable segmentation training
+- ReduceLROnPlateau scheduler for training stability
 - Device-agnostic design (CPU / MPS / CUDA)
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
-
 fracture-detection-segmentation/
 ├── app.py
 ├── requirements.txt
@@ -104,48 +84,18 @@ fracture-detection-segmentation/
 ├── pipeline/
 ├── utils/
 └── outputs/
-
-````
-
----
-
-## Inference Pipeline
-
-1. Upload X-ray image  
-2. YOLO detects fracture location  
-3. U-Net segments fracture region  
-4. Grad-CAM generates attention heatmap  
-5. Output includes detection, mask, and explainability  
+```
 
 ---
 
-## Deployment
-
-- Hosted on Hugging Face Spaces  
-- Model weights stored on Hugging Face Model Hub  
-- Downloaded dynamically at runtime  
-- Runs on CPU (HF Spaces constraint)
-
----
-
-## Key Engineering Decisions
-
-- Device resolved dynamically from model parameters  
-- Models loaded once at startup for performance  
-- Clear separation between UI and inference pipeline  
-
----
-
-## Run Locally
+## 🚀 Run Locally
 
 ```bash
-git clone https://github.com/mathewprasanth3/fracture-detection-segmentation.git
+git clone https://github.com/mathewprasanth/fracture-detection-segmentation.git
 cd fracture-detection-segmentation
 pip install -r requirements.txt
 python app.py
-````
-
----
+```
 
 ## Training
 
@@ -156,25 +106,18 @@ python models/unet/train.py
 
 ---
 
-## Results
+## ⚠️ Limitations
 
-| Metric     | Value  |
-| ---------- | ------ |
-| mAP50      | 0.479  |
-| Precision  | 0.709  |
-| Recall     | 0.462  |
-| Dice Score | 0.6224 |
+- Single-institution dataset (FracAtlas) — generalisation to other hospital equipment not validated
+- mAP50 of 0.479 reflects dataset difficulty (717 fractured vs 3,366 non-fractured) — larger multi-institution datasets would improve results significantly
+- Binary fracture detection only — fracture type classification not yet supported
 
 ---
 
-## Author
+## 👤 Author
 
-**Mathew Prasanth, PE**
-AI/ML Engineer
-[https://www.linkedin.com/in/mathewprasanth/](https://www.linkedin.com/in/mathewprasanth/)
-[https://huggingface.co/spaces/mathewprasanth/FractureDetectionSegmentation](https://huggingface.co/spaces/mathewprasanth/FractureDetectionSegmentation)
+**Mathew Prasanth, P.E.**
+AI/ML Engineer | U.S. Licensed Professional Engineer
+[LinkedIn](https://www.linkedin.com/in/mathewprasanth/) · [Live Demo](https://huggingface.co/spaces/mathewprasanth/FractureDetectionSegmentation)
 
-AWS Certified Cloud Practitioner · AWS Certified Machine Learning Specialty
-
-
-
+*AWS Certified ML Specialty · AWS Cloud Practitioner*
